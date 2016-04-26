@@ -1,7 +1,7 @@
 # slack-quick-bots reference app
 
 ```javascript
-git clone https://github.com/usubram/slack-quick-bots-reference.git
+git clone git@github.com:usubram/slack-quick-bots-reference.git
 npm install && node index.js
 ```
 
