@@ -8,56 +8,56 @@ const sampleTmpl = fs.readFileSync('./template/sample_tmpl.hbs', 'utf8');
 const service = require('./lib/service');
 
 var config = {
-  'bots': [{
-    'botCommand': {
-      'getquote': {
-        'commandType': 'DATA',
-        'defaultParamValue': 'wmt',
-        'template': function() {
+  bots: [{
+    botCommand: {
+      getquote: {
+        commandType: 'DATA',
+        defaultParamValue: 'wmt',
+        template: function() {
           return handlebars.compile(sampleTmpl);
         },
-        'data': function(command, param, callback) {
-          service.getQuote(param, function(err, data) {
+        data: function(input, options, callback) {
+          service.getQuote(input.params, function(err, data) {
             callback(data);
           });
         }
       },
-      'accessctl': {
-        'commandType': 'RECURSIVE',
-        'defaultParamValue': 1,
-        'template': function() {
+      accessctl: {
+        commandType: 'RECURSIVE',
+        defaultParamValue: 1,
+        template: function() {
           return handlebars.compile(sampleTmpl);
         },
-        'data': function(command, param, callback) {
-          service.getQuote(param, function(err, data) {
+        data: function(input, options, callback) {
+          service.getQuote(input.params, function(err, data) {
             callback(data);
           });
         },
-        'allowedUsers': ['slackUsername']
+        allowedUsers: ['slackUsername']
       },
-      'copycat': {
-        'commandType': 'DATA',
-        'allowedParam': ['copy', 'cat'],
-        'lowerLimit': 0,
-        'upperLimit': 100,
-        'defaultParamValue': 'copy',
-        'template': function() {
+      copycat: {
+        commandType: 'DATA',
+        allowedParam: ['copy', 'cat'],
+        lowerLimit: 0,
+        upperLimit: 100,
+        defaultParamValue: 'copy',
+        template: function() {
           return handlebars.compile(sampleTmpl);
         },
-        'data': function(command, param, callback) {
+        data: function(input, options, callback) {
           callback({
-            'copycat': true,
-            'param': param
+            copycat: true,
+            param: input.params
           });
         }
       },
-      'alert': {
-        'commandType': 'alert',
-        'timeInterval': '1',
-        'template': function() {
+      alert: {
+        commandType: 'ALERT',
+        timeInterval: 1,
+        template: function() {
           return handlebars.compile(sampleTmpl);
         },
-        'data': function(command, param, callback) {
+        data: function(input, options, callback) {
           var dataArr = [ // Sample data
             [100, 120, 130, 110, 123, 90],
             [1, 120, 130, 110, 90, 85],
@@ -72,9 +72,9 @@ var config = {
           callback(rand);
         }
       },
-      'graph': {
-        'commandType': 'DATA',
-        'responseType': {
+      graph: {
+        commandType: 'DATA',
+        responseType: {
           type: 'svg',
           ylabel: 'errors',
           timeUnit: 'm',
@@ -82,9 +82,9 @@ var config = {
           logscale: false,
           style: 'lines'
         },
-        'allowedParam': [1, 2],
-        'defaultParamValue': 1,
-        'data': function(command, param, callback) {
+        allowedParam: [1, 2],
+        defaultParamValue: 1,
+        data: function(input, options, callback) {
           var dataArr = [ // Sample data
             [100, 120, 130, 110, 123, 90],
             [1, 120, 130, 110, 90, 85],
@@ -100,8 +100,8 @@ var config = {
         }
       }
     },
-//    'blockDirectMessage': true,
-    'botToken': configPlugin.has('botToken') ? configPlugin.get('botToken')[0] : ''
+//    blockDirectMessage: true,
+    botToken: configPlugin.has('botToken') ? configPlugin.get('botToken')[0] : ''
   }]
 };
 var slackBot = new SlackBot(config);
