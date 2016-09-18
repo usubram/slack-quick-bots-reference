@@ -1,9 +1,6 @@
-{{#if list}}
-	{{#if list.meta.count}}
-		{{#each list.resources}}
-			{{resource.fields.name}}\n
-			{{resource.fields.price}}
-		{{/each}}
+{{#if query}}
+	{{#if query.results.quote.LastTradePriceOnly}}
+		{{query.results.quote.symbol}} {{query.results.quote.LastTradePriceOnly}} {{query.results.quote.Currency}}
 	{{else}}
 		Not found, provide correct quote name
 	{{/if}}

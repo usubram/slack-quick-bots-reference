@@ -1,22 +1,26 @@
 'use strict';
 
 const SlackBot = require('slack-quick-bots');
-const configPlugin = require('config');
 const handlebars = require('handlebars');
+const path = require('path');
 const fs = require('fs');
-const sampleTmpl = fs.readFileSync('./template/sample_tmpl.hbs', 'utf8');
+const sampleTmpl = fs.readFileSync(path.join(__dirname, 'template/sample_tmpl.hbs'), 'utf8');
 const service = require('./lib/service');
+
+var args = process.argv.slice(2);
 
 var config = {
   bots: [{
     botCommand: {
       getquote: {
         commandType: 'DATA',
-        defaultParamValue: 'wmt',
+        allowedParam: ['*'],
         template: function() {
           return handlebars.compile(sampleTmpl);
         },
         data: function(input, options, callback) {
+          console.log('input.params', input.params);
+          console.log(JSON.stringify(options));
           service.getQuote(input.params, function(err, data) {
             callback(data);
           });
@@ -54,9 +58,6 @@ var config = {
       alert: {
         commandType: 'ALERT',
         timeInterval: 1,
-        template: function() {
-          return handlebars.compile(sampleTmpl);
-        },
         data: function(input, options, callback) {
           var dataArr = [ // Sample data
             [100, 120, 130, 110, 123, 90],
@@ -75,12 +76,14 @@ var config = {
       graph: {
         commandType: 'DATA',
         responseType: {
-          type: 'svg',
+          type: 'png',
           ylabel: 'errors',
+          xlabel: 'title errors',
           timeUnit: 'm',
           title: 'Log data',
           logscale: false,
-          style: 'lines'
+          style: 'lines',
+          exec: { encoding: 'utf16' }
         },
         allowedParam: [1, 2],
         defaultParamValue: 1,
@@ -96,12 +99,22 @@ var config = {
             [100, 120, 130, 1010, 150, 90]
           ];
           var rand = dataArr[Math.floor(Math.random() * dataArr.length)];
-          callback(rand);
+          var data = {
+            response: rand,
+            responseType: {
+              xlabel: 'hello',
+              type: 'png',
+              ylabel: 'devil',
+              title: 'this is title from me',
+              style: 'lines'
+            }
+          }
+          callback(data);
         }
       }
     },
-//    blockDirectMessage: true,
-    botToken: configPlugin.has('botToken') ? configPlugin.get('botToken')[0] : ''
+    schedule: true,
+    botToken: args[0] || ''
   }]
 };
 var slackBot = new SlackBot(config);

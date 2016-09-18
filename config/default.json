@@ -1,4 +1,0 @@
-{
-  "yahooFinance": "http://finance.yahoo.com/webservice/v1/symbols/{quote}/quote?format=json",
-  "botToken": [""]
-}

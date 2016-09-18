@@ -3,16 +3,15 @@
   "version": "1.0.0",
   "description": "A sample reference app for using slack-quick-bots",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git"
   },
   "author": "umashankar.s@live.com",
   "license": "MIT",
   "dependencies": {
-    "config": "^1.17.1",
-    "handlebars": "^4.0.5",
-    "slack-quick-bots": "latest"
+    "handlebars": "4.0.5",
+    "lodash": "4.15.0",
+    "slack-quick-bots": "3.0.5"
   }
 }
