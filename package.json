@@ -7,11 +7,11 @@
   "repository": {
     "type": "git"
   },
-  "author": "umashankar.s@live.com",
   "license": "MIT",
   "dependencies": {
-    "handlebars": "4.0.5",
-    "lodash": "4.15.0",
-    "slack-quick-bots": "3.0.5"
+    "handlebars": "4.0.6",
+    "lodash": "4.17.4",
+    "slack-quick-bots": "4.0.15",
+    "winston": "2.3.1"
   }
 }

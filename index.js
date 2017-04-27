@@ -6,23 +6,47 @@ const path = require('path');
 const fs = require('fs');
 const sampleTmpl = fs.readFileSync(path.join(__dirname, 'template/sample_tmpl.hbs'), 'utf8');
 const service = require('./lib/service');
+const winston = require('winston');
 
-var args = process.argv.slice(2);
+const args = process.argv.slice(2);
 
-var config = {
+const logger = new winston.Logger({
+  level: 'info',
+  transports: [
+    new winston.transports.File({
+      filename: 'bot.log',
+      timestamp: true
+    })
+  ]
+});
+
+const config = {
   bots: [{
     botCommand: {
       getquote: {
         commandType: 'DATA',
         allowedParam: ['*'],
+        helpText: '    → This is help message',
         template: function() {
           return handlebars.compile(sampleTmpl);
         },
         data: function(input, options, callback) {
-          console.log('input.params', input.params);
-          console.log(JSON.stringify(options));
           service.getQuote(input.params, function(err, data) {
             callback(data);
+          });
+        }
+      },
+      auto: {
+        commandType: 'RECURSIVE',
+        lowerLimit: 0,
+        upperLimit: 100,
+        defaultParamValue: 1,
+        template: function () {
+          return handlebars.compile(sampleTmpl);
+        },
+        data: function (input, options, callback) {
+          callback({
+            'param': input.params
           });
         }
       },
@@ -33,11 +57,9 @@ var config = {
           return handlebars.compile(sampleTmpl);
         },
         data: function(input, options, callback) {
-          service.getQuote(input.params, function(err, data) {
-            callback(data);
-          });
+          callback({ copycat: true });
         },
-        allowedUsers: ['slackUsername']
+        allowedUsers: ['slackUsername'],
       },
       copycat: {
         commandType: 'DATA',
@@ -114,8 +136,24 @@ var config = {
       }
     },
     schedule: true,
+    webHook: true,
     botToken: args[0] || ''
-  }]
+  }],
+  server: {
+    port: 9000,
+    webHook: true
+  },
+  logger: logger
 };
-var slackBot = new SlackBot(config);
-slackBot.start();
+
+const slackBot = new SlackBot(config);
+
+slackBot.start().then((botEvt) => {
+  botEvt[0].on('message', (response) => {
+    console.log('Messages to bot', response);
+  });
+
+  botEvt[0].on('connect', () => {
+    console.log('Bot connected successfully');
+  });
+});
