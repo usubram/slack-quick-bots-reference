@@ -1,7 +1,6 @@
 'use strict';
 
 const SlackBot = require('slack-quick-bots');
-const handlebars = require('handlebars');
 const path = require('path');
 const fs = require('fs');
 const sampleTmpl = fs.readFileSync(path.join(__dirname, 'template/sample_tmpl.hbs'), 'utf8');
@@ -9,12 +8,13 @@ const service = require('./lib/service');
 const winston = require('winston');
 
 const args = process.argv.slice(2);
+const logFile = 'bot.log';
 
 const logger = new winston.Logger({
   level: 'info',
   transports: [
     new winston.transports.File({
-      filename: 'bot.log',
+      filename: logFile,
       timestamp: true
     })
   ]
@@ -27,9 +27,7 @@ const config = {
         commandType: 'DATA',
         allowedParam: ['*'],
         helpText: '    → This is help message',
-        template: function() {
-          return handlebars.compile(sampleTmpl);
-        },
+        template: sampleTmpl,
         data: function(input, options, callback) {
           service.getQuote(input.params, function(err, data) {
             callback(data);
@@ -41,9 +39,7 @@ const config = {
         lowerLimit: 0,
         upperLimit: 100,
         defaultParamValue: 1,
-        template: function () {
-          return handlebars.compile(sampleTmpl);
-        },
+        template: sampleTmpl,
         data: function (input, options, callback) {
           callback({
             'param': input.params
@@ -53,9 +49,7 @@ const config = {
       accessctl: {
         commandType: 'RECURSIVE',
         defaultParamValue: 1,
-        template: function() {
-          return handlebars.compile(sampleTmpl);
-        },
+        template: sampleTmpl,
         data: function(input, options, callback) {
           callback({ copycat: true });
         },
@@ -67,9 +61,7 @@ const config = {
         lowerLimit: 0,
         upperLimit: 100,
         defaultParamValue: 'copy',
-        template: function() {
-          return handlebars.compile(sampleTmpl);
-        },
+        template: sampleTmpl,
         data: function(input, options, callback) {
           callback({
             copycat: true,
@@ -143,17 +135,22 @@ const config = {
     port: 9000,
     webHook: true
   },
+  // proxy: {
+  //   url: 'http://youproxy.com:8080'
+  // },
   logger: logger
 };
 
 const slackBot = new SlackBot(config);
 
+console.log('Logs are at', logFile);
+
 slackBot.start().then((botEvt) => {
   botEvt[0].on('message', (response) => {
-    console.log('Messages to bot', response);
+    // console.log('Messages to bot', response);
   });
 
   botEvt[0].on('connect', () => {
-    console.log('Bot connected successfully');
+    // console.log('Bot connected successfully');
   });
 });

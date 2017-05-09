@@ -9,9 +9,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "handlebars": "4.0.6",
     "lodash": "4.17.4",
-    "slack-quick-bots": "4.0.15",
+    "slack-quick-bots": "5.0.2",
     "winston": "2.3.1"
   }
 }
