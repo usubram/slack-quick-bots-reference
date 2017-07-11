@@ -127,6 +127,11 @@ const config = {
         }
       }
     },
+    slackApi: {
+      user: {
+        exclude: true
+      }
+    },
     schedule: true,
     webHook: true,
     botToken: args[0] || ''

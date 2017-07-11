@@ -10,7 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "lodash": "4.17.4",
-    "slack-quick-bots": "5.0.2",
+    "slack-quick-bots": "5.0.10",
     "winston": "2.3.1"
   }
 }
