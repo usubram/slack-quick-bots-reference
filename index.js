@@ -23,86 +23,104 @@ const logger = new winston.Logger({
 const config = {
   bots: [{
     botCommand: {
-      getquote: {
+      log: {
         commandType: 'DATA',
-        allowedParam: ['*'],
-        helpText: '    → This is help message',
-        template: sampleTmpl,
-        data: function(input, options, callback) {
-          service.getQuote(input.params, function(err, data) {
-            callback(data);
-          });
-        }
-      },
-      auto: {
-        commandType: 'RECURSIVE',
-        lowerLimit: 0,
-        upperLimit: 100,
-        defaultParamValue: 1,
+        validation: [{
+          schema: ['a', 'b'],
+          default: ['a', 'b'],
+          help: [{
+            sample: '{firstArg}',
+            recommend: '1',
+            error: '{{arg}} is incorrect',
+          }, {
+            sample: '{secondArg}',
+            recommend: '1',
+            error: '{{arg}} is incorrect',
+          }],
+        }],
+        descriptionText: 'Command to show log metrics',
+        helpText: '☞ this is log command',
         template: sampleTmpl,
         data: function (input, options, callback) {
-          callback({
-            'param': input.params
+          // input.command - for command name.
+          // input.params - for params in array.
+          // options.user.profile.email - email in slack.
+          // options.hookUrl - custom webhook url.
+          // options.channel - channel from which the command was fired.
+          callback(null, {
+            param: input.params + ' log',
           });
-        }
-      },
-      accessctl: {
-        commandType: 'RECURSIVE',
-        defaultParamValue: 1,
-        template: sampleTmpl,
-        data: function(input, options, callback) {
-          callback({ copycat: true });
         },
-        allowedUsers: ['slackUsername'],
       },
-      copycat: {
+      logme: {
         commandType: 'DATA',
-        allowedParam: ['copy', 'cat'],
-        lowerLimit: 0,
-        upperLimit: 100,
-        defaultParamValue: 'copy',
+        validation: [{
+          schema: [/[1]/, /[1]/],
+          default: [1, 1],
+          help: [{
+            sample: '{firstArg}',
+            recommend: '1',
+            error: '{{arg}} is incorrect',
+          }, {
+            sample: '{secondArg}',
+            recommend: '1',
+            error: '{{arg}} is incorrect',
+          }],
+        }, {
+          schema: [/[2]/, /[2]/],
+          default: [2],
+          help: [{
+            sample: '{firstArg}',
+            recommend: ['2', '2'],
+            error: '{{arg}} is incorrect',
+          }, {
+            sample: '{secondArg}',
+            recommend: '2',
+            error: '{{arg}} is incorrect',
+          }],
+        }],
+        helpText: '☞ this is log command',
         template: sampleTmpl,
-        data: function(input, options, callback) {
-          callback({
-            copycat: true,
-            param: input.params
+        data: function (input, options, callback) {
+          // input.command - for command name.
+          // input.params - for params in array.
+          // options.user.profile.email - email in slack.
+          // options.hookUrl - custom webhook url.
+          // options.channel - channel from which the command was fired.
+          callback(null, {
+            param: input.params + ' log',
           });
-        }
+        },
       },
-      alert: {
-        commandType: 'ALERT',
-        timeInterval: 1,
-        data: function(input, options, callback) {
-          var dataArr = [ // Sample data
-            [100, 120, 130, 110, 123, 90],
-            [1, 120, 130, 110, 90, 85],
-            [1, 120, 130, 1010, 140, 145],
-            [100, 120, 130, 250, 140, 145],
-            [100, 120, 130, 300, 140, 145],
-            [100, 400, 130, 300, 140, 145],
-            [100, 90, 130, 300, 140, 145],
-            [100, 120, 130, 1010, 150, 90]
-          ];
-          var rand = dataArr[Math.floor(Math.random() * dataArr.length)];
-          callback(rand);
-        }
-      },
-      graph: {
+      trend: {
         commandType: 'DATA',
         responseType: {
           type: 'png',
           ylabel: 'errors',
-          xlabel: 'title errors',
           timeUnit: 'm',
           title: 'Log data',
           logscale: false,
           style: 'lines',
-          exec: { encoding: 'utf16' }
+          exec: {
+            encoding: 'utf16',
+          },
         },
-        allowedParam: [1, 2],
-        defaultParamValue: 1,
-        data: function(input, options, callback) {
-          var dataArr = [ // Sample data
+        validation: [{
+          schema: [1, 2],
+          default: [1, 2],
+          help: [{
+            sample: '{firstArg}',
+            recommend: '1',
+            error: '{{arg}} is incorrect',
+          }, {
+            sample: '{secondArg}',
+            recommend: '1',
+            error: '{{arg}} is incorrect',
+          }],
+        }],
+        helpText: '☞ this is trend command',
+        data: function (input, options, callback) {
+          const dataArr = [ // Sample data
             [100, 120, 130, 110, 123, 90],
             [1, 120, 130, 110, 90, 85],
             [1, 120, 130, 1010, 140, 145],
@@ -110,40 +128,97 @@ const config = {
             [100, 120, 130, 300, 140, 145],
             [100, 400, 130, 300, 140, 145],
             [100, 90, 130, 300, 140, 145],
-            [100, 120, 130, 1010, 150, 90]
+            [100, 120, 130, 1010, 150, 90],
           ];
-          var rand = dataArr[Math.floor(Math.random() * dataArr.length)];
-          var data = {
-            response: rand,
+          const rand = dataArr[Math.floor(Math.random() * dataArr.length)];
+          callback(null, rand);
+        },
+      },
+      error: {
+        commandType: 'RECURSIVE',
+        validation: [{
+          schema: [/^(?:[1-9]\d?|100)$/],
+          default: [1],
+          help: [{
+            sample: '{firstArg}',
+            recommend: '1',
+            error: '{{arg}} is incorrect',
+          }, {
+            sample: '{secondArg}',
+            recommend: '1',
+            error: '{{arg}} is incorrect',
+          }],
+        }],
+        helpText: '☞ this is error command',
+        template: sampleTmpl,
+        data: function (input, options, callback) {
+          callback(null, {
+            param: input.params,
+          });
+        },
+      },
+      alert: {
+        commandType: 'ALERT',
+        timeInterval: 1,
+        helpText: '    → this a alert command',
+        algo: 'CUMULATIVE_DIFFERENCE',
+        data: function (input, options, callback) {
+          const dataArr = [ // Sample data
+            {
+              time: moment().unix() - 1000,
+              value: 400,
+            },
+            {
+              time: moment().unix(),
+              value: 120,
+            },
+          ];
+          callback(null, dataArr);
+        },
+      },
+      file: {
+        commandType: 'DATA',
+        helpText: '☞ this a file post command',
+        data: function (input, options, callback) {
+          callback(null, {
             responseType: {
-              xlabel: 'hello',
-              type: 'png',
-              ylabel: 'devil',
-              title: 'this is title from me',
-              style: 'lines'
-            }
-          }
-          callback(data);
-        }
-      }
-    },
-    slackApi: {
-      user: {
-        exclude: true
-      }
+              type: 'xml',
+              name: 'hello',
+            },
+            response: '<xml></xml>',
+          });
+        },
+      },
     },
     schedule: true,
+    blockDirectMessage: false,
     webHook: true,
-    botToken: args[0] || ''
+    slackApi: {
+      user: {
+        exclude: true,
+        presence: false,
+        limit: 1000,
+      },
+      channel: {
+        exclude: true,
+      },
+    },
+    mock: {
+      self: {
+        name: 'testbot1',
+        id: 'U1234567',
+      },
+    },
+    botToken: args[0],
   }],
-  server: {
-    port: 9000,
-    webHook: true
-  },
   // proxy: {
-  //   url: 'http://youproxy.com:8080'
+  //   url: 'http://proxy.socketproxy.com:8080/'
   // },
-  logger: logger
+  logger: console, // you could pass a winston logger.
+  server: {
+    port: 9090,
+    webHook: false,
+  },
 };
 
 const slackBot = new SlackBot(config);
