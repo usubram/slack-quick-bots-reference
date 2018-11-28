@@ -1,16 +1,24 @@
 {
   "name": "slack-quick-bots-reference",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A sample reference app for using slack-quick-bots",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "NODE_ENV=test mocha --recursive --exit ./test/*.js"
+  },
   "repository": {
     "type": "git"
   },
   "license": "MIT",
   "dependencies": {
-    "lodash": "4.17.4",
+    "lodash": "4.17.11",
     "slack-quick-bots": "7.1.3",
     "winston": "2.3.1"
+  },
+  "devDependencies": {
+    "chai": "4.2.0",
+    "mocha": "5.2.0",
+    "sinon": "7.1.1",
+    "uuid": "3.3.2"
   }
 }

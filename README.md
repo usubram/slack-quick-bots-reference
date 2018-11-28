@@ -2,8 +2,11 @@
 
 ```javascript
 git clone git@github.com:usubram/slack-quick-bots-reference.git
-npm install && node index.js
+npm install && node index.js <botToken> // pass your bot token.
 ```
 
-## Documentation
-[www.slack-quick-bots.io](http://www.slack-quick-bots.io)
+## Running test
+
+```javascript
+npm run test
+```
