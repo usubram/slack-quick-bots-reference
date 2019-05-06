@@ -4,7 +4,8 @@
   "description": "A sample reference app for using slack-quick-bots",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha --recursive --exit ./test/*.js"
+    "test": "NODE_ENV=test mocha --recursive --exit ./test/*.js",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git"
@@ -16,6 +17,10 @@
     "winston": "3.2.1"
   },
   "devDependencies": {
+    "eslint": "5.16.0",
+    "eslint-config-defaults": "9.0.0",
+    "eslint-config-google": "0.12.0",
+    "eslint-plugin-filenames": "1.3.2",
     "chai": "4.2.0",
     "mocha": "6.1.4",
     "sinon": "7.3.2",

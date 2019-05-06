@@ -12,15 +12,15 @@ _.set(config, 'bots.0.mock', {
   self: {
     name: 'testbot1',
     id: 'U1234567',
-  }
+  },
 });
 
-describe('Slack quick bots reference bot test', function() {
+describe('Slack quick bots reference bot test', function () {
   let slackBot;
   let sandbox;
   let slackMessage;
 
-  beforeEach(function() {
+  beforeEach(function () {
     sandbox = sinon.createSandbox();
     slackBot = new SlackBot(config, {
       isMock: true,
@@ -36,7 +36,7 @@ describe('Slack quick bots reference bot test', function() {
     };
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
     slackBot = null;
   });
